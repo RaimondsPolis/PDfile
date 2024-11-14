@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect
-from dati import add_user
+from dati import add_user, iegut_lietotaju, iegut_zinojumus, add_message
 
 app = Flask(__name__)
 
@@ -24,10 +24,16 @@ def index():
 
 @app.route("/zinojumi", methods=["POST","GET"])
 def zinojumi():
+    users = iegut_lietotaju()
+    dati = iegut_zinojumus()
+    if request.method == "POST":
+        user_id = request.form['name']
+        zinojums = request.form['zinojums']
+        add_message(zinojums, user_id)
+        
+        return render_template("zinojumi.html", users = users, dati = dati)
 
-        #    VAJAG UZTAISĪT sistēmu kas aizsūta vārdus n shit no datubāzes uz ziņojumiem
-
-    return render_template("zinojumi.html")
+    return render_template("zinojumi.html", users = users, dati = dati)
 
 @app.route("/statistika")
 def statistika():

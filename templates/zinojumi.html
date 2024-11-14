@@ -24,16 +24,35 @@
 <a href="/statistika">Ziņojumu statistika</a>
 <hr>
 
-<h1> REĢISTRĀCIJA</h1>
+<h1> Ziņojumi</h1>
 <form method="post">
     <select id="name" name="name" placeholder="Vārds, uzvārds">
         {% for viens in users %}
-        <option value = "{{viens[2]}}">{{viens[0]}} {{viens[1]}} </option>
+        <option value = "{{viens[1]}}">{{viens[0]}} </option>
         {% endfor %}
     </select>
     <input type="text" id="zinojums" name="zinojums" placeholder="Tavs vēstījums pasaulei">
     <input type="submit" value="Publicēt">
 
+    <table class="table">
+    
+        <tr>
+            <th>Vārds</th>
+            <th>Uzvārds</th>
+            <th>Ziņojums</th>
+        </tr>
+
+        {% for viens in dati %}
+        <tr>
+            <td>{{viens[0]}}</td>
+            <td>{{viens[1]}}</td>
+            <td>{{viens[2]}}</td>
+        </tr>
+        {%endfor%}
+
+
+
+    </table>
         
 
 </body>

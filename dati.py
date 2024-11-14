@@ -24,7 +24,9 @@ def zinojumu_tabulas_izveide():
         """
         CREATE TABLE zinojumi(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        zinojums TEXT NOT NULL
+        userid INTEGER NOT NULL,
+        zinojums TEXT NOT NULL,
+        FOREIGN KEY(userid) REFERENCES users(id)
         )
         """
     )
@@ -42,3 +44,33 @@ def add_user(vards, uzvards, lietotajvards):
         """
     )
     conn.commit()
+
+def add_message(zinojums, id):
+    print(zinojums)
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        INSERT INTO zinojumi(zinojums, userid) VALUES("{zinojums}","{id}")
+        """
+    )
+    conn.commit()
+
+
+
+def iegut_zinojumus():
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT vards, uzvards, zinojums FROM users JOIN zinojumi ON userid=users.id"""
+    )
+    conn.commit()
+    dati = cur.fetchall()
+    return dati
+
+def iegut_lietotaju():
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT lietotajvards, id FROM users ORDER BY lietotajvards ASC"""
+    )
+    conn.commit()
+    dati = cur.fetchall()
+    return dati
