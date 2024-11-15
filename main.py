@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask, render_template, request, redirect
-from dati import add_user, iegut_lietotaju, iegut_zinojumus, add_message
+from dati import add_user, iegut_lietotaju, iegut_zinojumus, add_message, iegut_skaitu
 
 app = Flask(__name__)
 
@@ -12,13 +12,21 @@ def index():
         vards = request.form['name']
         uzvards = request.form['lastname']
         lietotajvards = request.form['username']
+        dati = ""
+        try:
+            error = ("All text boxes must be filled!")
+            if vards and uzvards and lietotajvards:
+                add_user(vards, uzvards, lietotajvards)
+                error = ""
+                dati = (f"Pievienots lietotājs - {vards} {uzvards}, {lietotajvards}")
+        except sqlite3.IntegrityError:
+            error = ("Username allready exists!")
+        except:
+            error = ("An unnexpected error occoured!")
 
-        if vards and uzvards and lietotajvards:
-            add_user(vards, uzvards, lietotajvards)
+        
 
-        dati = f"Pievienots lietotājs - {vards} {uzvards}, {lietotajvards}"
-
-        return render_template("index.html", aizsutitais = dati)
+        return render_template("index.html", aizsutitais = dati, error1 = error)
 
     return render_template("index.html")
 
@@ -37,7 +45,9 @@ def zinojumi():
 
 @app.route("/statistika")
 def statistika():
-    return render_template("statistika.html")
+    lietotaji = iegut_skaitu()
+    print(lietotaji)
+    return render_template("statistika.html", lietotaji = lietotaji)
 
 
 

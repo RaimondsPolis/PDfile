@@ -32,8 +32,9 @@ def zinojumu_tabulas_izveide():
     )
     conn.commit()
 
-# lietotaju_tabulas_izveide()
-# zinojumu_tabulas_izveide()
+
+#lietotaju_tabulas_izveide()
+#zinojumu_tabulas_izveide()
 
 def add_user(vards, uzvards, lietotajvards):
     print(vards, uzvards)
@@ -55,12 +56,10 @@ def add_message(zinojums, id):
     )
     conn.commit()
 
-
-
 def iegut_zinojumus():
     cur = conn.cursor()
     cur.execute(
-        """SELECT vards, uzvards, zinojums FROM users JOIN zinojumi ON userid=users.id"""
+        """SELECT vards, uzvards, zinojums FROM users JOIN zinojumi ON userid=users.id ORDER BY zinojumi.id DESC"""
     )
     conn.commit()
     dati = cur.fetchall()
@@ -74,3 +73,17 @@ def iegut_lietotaju():
     conn.commit()
     dati = cur.fetchall()
     return dati
+
+def iegut_skaitu():
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT users.vards, users.uzvards, COUNT(zinojumi.id) AS zinojumu_skaits
+        FROM users
+        LEFT JOIN zinojumi ON users.id = zinojumi.userid
+        GROUP BY users.vards, users.uzvards
+        """
+    )
+    dati = cur.fetchall()
+    return dati
+
