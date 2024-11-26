@@ -34,12 +34,20 @@ def index():
 def zinojumi():
     users = iegut_lietotaju()
     dati = iegut_zinojumus()
+    error = ""
     if request.method == "POST":
         user_id = request.form['name']
         zinojums = request.form['zinojums']
-        add_message(zinojums, user_id)
-        
-        return render_template("zinojumi.html", users = users, dati = dati)
+        try:
+            error = "Message cannot be empty"
+            if zinojums:
+                error = ""
+                add_message(zinojums, user_id)
+        except:
+            error = "An unexpected error occoured!"
+
+
+        return render_template("zinojumi.html", users = users, dati = dati, error = error)
 
     return render_template("zinojumi.html", users = users, dati = dati)
 
